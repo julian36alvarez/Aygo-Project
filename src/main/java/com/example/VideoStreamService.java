@@ -48,7 +48,7 @@ public class VideoStreamService {
     private S3Client getClient() {
 
         // Create the S3Client object.
-        Region region = Region.US_WEST_2;
+        Region region = Region.US_EAST_1;
         s3 = S3Client.builder()
                 .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
                 .region(region)
@@ -202,7 +202,7 @@ public class VideoStreamService {
                 Element id = doc.createElement( "Name" );
                 id.appendChild( doc.createTextNode(myItem.getName() ) );
                 item.appendChild( id );
-.
+
                 // Set Description.
                 Element name = doc.createElement( "Description" );
                 name.appendChild( doc.createTextNode(myItem.getDesc() ) );
