@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+
+  aygo-project:
+    image: nontoa10/aygo-project:latest
+    container_name: aygo-project
+    ports:
+      - "8080:8080"
