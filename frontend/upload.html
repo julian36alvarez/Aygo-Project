@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <title>Video Stream</title>
+
+</head>
+<body>
+<header></header>
+<div class="container">
+    <h2>Video Stream</h2>
+
+    <form method="POST" action="http://aygo-project-load-balancer-1802059585.us-east-1.elb.amazonaws.com/fileupload"
+          enctype="multipart/form-data">
+        Video Description:<input type="text" name="description" required><br>
+        <input type="file" name="file"/><br/><br/>
+        <input type="submit" value="Submit"/>
+    </form>
+</div>
+</body>
+</html>
