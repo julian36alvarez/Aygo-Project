@@ -54,17 +54,23 @@ public class CdkStack extends Stack {
         securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(22), "allow SSH access");
         securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(8080), "allow HTTP access");
 
-        CfnKeyPair cfnKeyPair = CfnKeyPair.Builder.create(this, "aygo-project-key")
-                .keyName("aygo-project-key")
-                .keyType("RSA")
-                .build();
 
         UserData userDataScript = UserData.forLinux();
-        userDataScript.addCommands("sudo yum install docker -y");
-        userDataScript.addCommands("sudo service docker start");
-        userDataScript.addCommands("sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/bin/docker-compose");
-        userDataScript.addCommands("sudo chmod +x /usr/bin/docker-compose");
-        //TODO: It's missing to download de docker-compose.yml
+        userDataScript.addCommands("sudo su");
+        userDataScript.addCommands("yum update -y");
+        userDataScript.addCommands("yum install docker -y");
+        userDataScript.addCommands("service docker start");
+        userDataScript.addCommands("curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/bin/docker-compose");
+        userDataScript.addCommands("chmod +x /usr/bin/docker-compose");
+        userDataScript.addCommands("cd /home/ec2-user");
+        userDataScript.addCommands("touch docker-compose.yml");
+        userDataScript.addCommands("echo 'version: \"2\"' >> docker-compose.yml");
+        userDataScript.addCommands("echo 'services:' >> docker-compose.yml");
+        userDataScript.addCommands("echo '  aygo-project:' >> docker-compose.yml");
+        userDataScript.addCommands("echo '    image:  nontoa10/aygo-project-test:latest' >> docker-compose.yml");
+        userDataScript.addCommands("echo '    ports:' >> docker-compose.yml");
+        userDataScript.addCommands("echo '      - \"8080:8080\"' >> docker-compose.yml");
+
         userDataScript.addCommands("sudo docker-compose up -d");
 
         List<InstanceTarget> targets = new ArrayList<>();
@@ -78,7 +84,7 @@ public class CdkStack extends Stack {
                     .allowAllOutbound(true)
                     .securityGroup(securityGroup)
                     .userData(userDataScript)
-                    .keyName("aygo-project-key")
+                    .keyName("aygo-key")
                     .build();
             InstanceTarget instanceTarget = new InstanceTarget(instance);
             targets.add(instanceTarget);
