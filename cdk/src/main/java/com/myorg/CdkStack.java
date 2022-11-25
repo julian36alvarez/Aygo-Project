@@ -1,9 +1,14 @@
 package com.myorg;
 
+import software.amazon.awscdk.RemovalPolicy;
 import software.amazon.awscdk.services.ec2.*;
 import software.amazon.awscdk.services.elasticloadbalancingv2.*;
 import software.amazon.awscdk.services.elasticloadbalancingv2.Protocol;
 import software.amazon.awscdk.services.elasticloadbalancingv2.targets.InstanceTarget;
+import software.amazon.awscdk.services.s3.BlockPublicAccess;
+import software.amazon.awscdk.services.s3.Bucket;
+import software.amazon.awscdk.services.s3.BucketEncryption;
+import software.amazon.awscdk.services.s3.ObjectOwnership;
 import software.constructs.Construct;
 import software.amazon.awscdk.Duration;
 import software.amazon.awscdk.Stack;
@@ -11,6 +16,11 @@ import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.services.sns.Topic;
 import software.amazon.awscdk.services.sns.subscriptions.SqsSubscription;
 import software.amazon.awscdk.services.sqs.Queue;
+
+import software.amazon.awscdk.services.stepfunctions.Pass;
+import software.amazon.awscdk.services.stepfunctions.StateMachine;
+import software.amazon.awscdk.services.stepfunctions.StateMachineType;
+import software.amazon.awscdk.services.apigateway.StepFunctionsRestApi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +63,7 @@ public class CdkStack extends Stack {
 
         securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(22), "allow SSH access");
         securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(8080), "allow HTTP access");
+        securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(443), "allow HTTPS access");
 
 
         UserData userDataScript = UserData.forLinux();
@@ -63,15 +74,33 @@ public class CdkStack extends Stack {
         userDataScript.addCommands("curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/bin/docker-compose");
         userDataScript.addCommands("chmod +x /usr/bin/docker-compose");
         userDataScript.addCommands("cd /home/ec2-user");
-        userDataScript.addCommands("touch docker-compose.yml");
-        userDataScript.addCommands("echo 'version: \"2\"' >> docker-compose.yml");
-        userDataScript.addCommands("echo 'services:' >> docker-compose.yml");
-        userDataScript.addCommands("echo '  aygo-project:' >> docker-compose.yml");
-        userDataScript.addCommands("echo '    image:  nontoa10/aygo-project-test:latest' >> docker-compose.yml");
-        userDataScript.addCommands("echo '    ports:' >> docker-compose.yml");
-        userDataScript.addCommands("echo '      - \"8080:8080\"' >> docker-compose.yml");
 
-        userDataScript.addCommands("sudo docker-compose up -d");
+
+        userDataScript.addCommands("yum install java-1.8.0");
+        userDataScript.addCommands("yum install -y java-1.8.0-openjdk-devel");
+        userDataScript.addCommands("alternatives --set java /usr/lib/jvm/jre-1.8.0-openjdk.x86_64/bin/java");
+
+        userDataScript.addCommands("wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo");
+        userDataScript.addCommands("sed -i s/\\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo");
+        userDataScript.addCommands("yum install -y apache-maven");
+        userDataScript.addCommands("yum install git -y");
+        userDataScript.addCommands("git clone https://github.com/julian36alvarez/Aygo-Project.git");
+        userDataScript.addCommands("cd Aygo-Project");
+        userDataScript.addCommands("mvn clean install");
+        userDataScript.addCommands("export AWS_ACCESS_KEY_ID=xx");
+        userDataScript.addCommands("export AWS_SECRET_ACCESS_KEY=xx");
+        userDataScript.addCommands("java -jar target/SpringVideoApp-1.0-SNAPSHOT.jar --server.port=8080");
+
+
+        Bucket.Builder.create(this, "aygo-bucket-project-test")
+                .bucketName("aygo-bucket-project-test")
+                .versioned(false)
+                .removalPolicy(RemovalPolicy.DESTROY)
+                .encryption(BucketEncryption.UNENCRYPTED)
+                .autoDeleteObjects(false)
+                .blockPublicAccess(BlockPublicAccess.BLOCK_ACLS) // Block all public access ??
+                .objectOwnership(ObjectOwnership.BUCKET_OWNER_PREFERRED)
+                .build();
 
         List<InstanceTarget> targets = new ArrayList<>();
 
@@ -113,6 +142,7 @@ public class CdkStack extends Stack {
                 .loadBalancerName("aygo-project-load-balancer")
                 .ipAddressType(IpAddressType.IPV4)
                 .vpc(vpc)
+                .internetFacing(true)
                 .vpcSubnets(subnetSelection)
                 .securityGroup(securityGroup)
                 .build();
@@ -123,6 +153,10 @@ public class CdkStack extends Stack {
                         .targetGroups(Arrays.asList(targetGroup))
                 .build());
 
+
+        //api gateway
+
+        //
 
         topic.addSubscription(new SqsSubscription(queue));
     }
