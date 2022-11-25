@@ -28,7 +28,7 @@ public class VideoStreamController {
     @Autowired
     VideoStreamService vid;
 
-    private String bucket = "aygo-bucket-project";
+    private String bucket = "aygo-bucket-project-test";
 
     @RequestMapping(value = "/")
     public String root() {
