@@ -85,11 +85,11 @@ public class CdkStack extends Stack {
         userDataScript.addCommands("yum install -y apache-maven");
         userDataScript.addCommands("yum install git -y");
         userDataScript.addCommands("git clone https://github.com/julian36alvarez/Aygo-Project.git");
-        userDataScript.addCommands("cd Aygo-Project");
+        userDataScript.addCommands("cd Aygo-Project/backend");
         userDataScript.addCommands("mvn clean install");
         userDataScript.addCommands("export AWS_ACCESS_KEY_ID=xx");
         userDataScript.addCommands("export AWS_SECRET_ACCESS_KEY=xx");
-        userDataScript.addCommands("java -jar target/SpringVideoApp-1.0-SNAPSHOT.jar --server.port=8080");
+        userDataScript.addCommands("java -jar backend/target/SpringVideoApp-1.0-SNAPSHOT.jar --server.port=8080");
 
 
         Bucket.Builder.create(this, "aygo-bucket-project-test")
