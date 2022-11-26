@@ -63,7 +63,6 @@ public class CdkStack extends Stack {
 
         securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(22), "allow SSH access");
         securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(8080), "allow HTTP access");
-        securityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(443), "allow HTTPS access");
 
 
         UserData userDataScript = UserData.forLinux();
