@@ -7,10 +7,28 @@ import {
   Input,
   Button
 } from '@chakra-ui/react'
+import { useState } from 'react'
 import Footer from '../components/footer'
 import NavBar from '../components/navbar'
+import config from '../config/config'
 
 const UploadVideo = () => {
+  const [description, setDescription] = useState('')
+  const [file, setFile] = useState(null)
+
+  const handleDescriptionChange = e => setDescription(e.target.value)
+  const handleFileChange = e => setFile(e.target.files[0])
+
+  const sendVideo = e => {
+    e.preventDefault()
+    const formData = new FormData()
+    formData.append('file', file)
+    fetch(`${config.url}/fileupload?description=${description}`, {
+      method: 'POST',
+      body: formData
+    }).then(r => alert('Video uploaded successfully!'))
+  }
+
   return (
     <Box pb={4}>
       <NavBar />
@@ -23,9 +41,20 @@ const UploadVideo = () => {
         >
           <FormControl>
             <FormLabel>Video Description</FormLabel>
-            <Input required type={'text'} name="description" marginBottom={8} />
-            <Input type="file" variant="unstyled" />
-            <Button type="submit" mt="4" colorScheme={'green'}>
+            <Input
+              required
+              type={'text'}
+              name="description"
+              marginBottom={8}
+              onChange={handleDescriptionChange}
+            />
+            <Input type="file" variant="unstyled" onChange={handleFileChange} />
+            <Button
+              type="submit"
+              mt="4"
+              colorScheme={'green'}
+              onClick={sendVideo}
+            >
               Upload
             </Button>
           </FormControl>

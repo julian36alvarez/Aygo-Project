@@ -3,6 +3,7 @@ package com.example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +21,13 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class VideoStreamController {
 
     @Autowired
     VideoStreamService vid;
 
-    private String bucket = "aygo-bucket-project-test";
+    private String bucket = "aygo-vs-dev1";
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<String> root() {
@@ -45,8 +47,7 @@ public class VideoStreamController {
     // Upload a MP4 to an Amazon S3 bucket
     @RequestMapping(value = "/fileupload", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView singleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam String description) {
-
+    public ResponseEntity<Void> singleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam String description) {
         try {
             byte[] bytes = file.getBytes();
             String name = file.getOriginalFilename();
@@ -58,7 +59,7 @@ public class VideoStreamController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ModelAndView(new RedirectView("upload"));
+        return ResponseEntity.ok();
     }
 
     // Returns items to populate the Video menu.
