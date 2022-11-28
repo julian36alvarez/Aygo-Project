@@ -1,6 +1,10 @@
 package com.myorg;
 
 import software.amazon.awscdk.RemovalPolicy;
+import software.amazon.awscdk.services.apigateway.IntegrationType;
+import software.amazon.awscdk.services.apigatewayv2.alpha.CorsPreflightOptions;
+import software.amazon.awscdk.services.apigatewayv2.alpha.HttpApi;
+import software.amazon.awscdk.services.autoscaling.AutoScalingGroup;
 import software.amazon.awscdk.services.ec2.*;
 import software.amazon.awscdk.services.elasticloadbalancingv2.*;
 import software.amazon.awscdk.services.elasticloadbalancingv2.Protocol;
@@ -24,6 +28,7 @@ import software.amazon.awscdk.services.apigateway.StepFunctionsRestApi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CdkStack extends Stack {
@@ -101,9 +106,9 @@ public class CdkStack extends Stack {
                 .objectOwnership(ObjectOwnership.BUCKET_OWNER_PREFERRED)
                 .build();
 
-        List<InstanceTarget> targets = new ArrayList<>();
+        //List<InstanceTarget> targets = new ArrayList<>();
 
-        for (int i = 0; i < 3; i++) {
+        /*for (int i = 0; i < 3; i++) {
             Instance instance = Instance.Builder.create(this, "aygo-project-" + i)
                     .instanceType(instanceType)
                     .machineImage(machineImage)
@@ -116,7 +121,24 @@ public class CdkStack extends Stack {
                     .build();
             InstanceTarget instanceTarget = new InstanceTarget(instance);
             targets.add(instanceTarget);
-        }
+        }*/
+
+        //auto scaling group
+        AutoScalingGroup autoScalingGroup = AutoScalingGroup.Builder.create(this, "AutoScalingGroup")
+                .instanceType(instanceType)
+                .machineImage(machineImage)
+                .vpc(vpc)
+                .vpcSubnets(subnetSelection)
+                .allowAllOutbound(true)
+                .securityGroup(securityGroup)
+                .userData(userDataScript)
+                .keyName("aygo-key")
+                .minCapacity(1)
+                .maxCapacity(3)
+                .build();
+
+
+
 
         HealthCheck healthCheck = HealthCheck
                 .builder()
@@ -125,6 +147,7 @@ public class CdkStack extends Stack {
                 .port("8080")
                 .build();
 
+        // 👇 add target to the ALB listener autoScalingGroup as target
         ApplicationTargetGroup targetGroup = ApplicationTargetGroup.Builder.create(this, "aygo-project-target-group")
                 .targetGroupName("aygo-project-target-group")
                 .targetType(TargetType.INSTANCE)
@@ -133,7 +156,7 @@ public class CdkStack extends Stack {
                 .vpc(vpc)
                 .protocolVersion(ApplicationProtocolVersion.HTTP1)
                 .healthCheck(healthCheck)
-                .targets(targets)
+                .targets(Collections.singletonList(autoScalingGroup))
                 .build();
 
 
@@ -153,7 +176,17 @@ public class CdkStack extends Stack {
                 .build());
 
 
-        //api gateway
+        //api gateway http api from load balancer
+        HttpApi.Builder.create(this, "aygo-project-api-gateway")
+                .apiName("aygo-project-api-gateway")
+                .corsPreflight(CorsPreflightOptions.builder()
+                        .allowOrigins(Arrays.asList("*"))
+                        //.allowMethods(Arrays.asList(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE))
+                        .allowHeaders(Arrays.asList("*"))
+                        .build())
+                .build();
+
+
 
         //
 
