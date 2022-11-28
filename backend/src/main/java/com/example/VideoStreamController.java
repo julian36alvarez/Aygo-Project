@@ -1,26 +1,23 @@
-/*
-   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-   SPDX-License-Identifier: Apache-2.0
-*/
-
 package com.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import reactor.core.publisher.Mono;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 public class VideoStreamController {
@@ -30,9 +27,9 @@ public class VideoStreamController {
 
     private String bucket = "aygo-bucket-project-test";
 
-    @RequestMapping(value = "/")
-    public String root() {
-        return "index";
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ResponseEntity<String> root() {
+        return ResponseEntity.ok("Welcome to the Video Streamer!");
     }
 
     @GetMapping("/watch")
@@ -52,8 +49,8 @@ public class VideoStreamController {
 
         try {
             byte[] bytes = file.getBytes();
-            String name = file.getOriginalFilename() ;
-            String desc2 = description ;
+            String name = file.getOriginalFilename();
+            String desc2 = description;
 
             // Put the MP4 file into an Amazon S3 bucket.
             vid.putVideo(bytes, bucket, name, desc2);
@@ -67,10 +64,8 @@ public class VideoStreamController {
     // Returns items to populate the Video menu.
     @RequestMapping(value = "/items", method = RequestMethod.GET)
     @ResponseBody
-    public String getItems(HttpServletRequest request, HttpServletResponse response) {
-
-        String xml = vid.getTags(bucket);
-        return xml;
+    public List<Tag> getItems(HttpServletRequest request, HttpServletResponse response) {
+        return vid.getTags(bucket);
     }
 
     // Returns the video in the bucket specified by the ID value.
