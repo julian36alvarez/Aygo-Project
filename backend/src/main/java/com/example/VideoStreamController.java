@@ -47,7 +47,7 @@ public class VideoStreamController {
     // Upload a MP4 to an Amazon S3 bucket
     @RequestMapping(value = "/fileupload", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Void> singleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam String description) {
+    public ResponseEntity<String> singleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam String description) {
         try {
             byte[] bytes = file.getBytes();
             String name = file.getOriginalFilename();
@@ -59,7 +59,7 @@ public class VideoStreamController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok();
+        return ResponseEntity.ok("File uploaded successfully!");
     }
 
     // Returns items to populate the Video menu.
