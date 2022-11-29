@@ -26,7 +26,9 @@ const UploadVideo = () => {
     fetch(`${config.url}/fileupload?description=${description}`, {
       method: 'POST',
       body: formData
-    }).then(r => console.log(r))
+    }).then(r => {
+      setDescription('')
+    })
   }
 
   return (
@@ -46,8 +48,15 @@ const UploadVideo = () => {
               name="description"
               marginBottom={8}
               onChange={handleDescriptionChange}
+              value={description}
             />
-            <Input type="file" variant="unstyled" onChange={handleFileChange} />
+            <Input
+              key={description}
+              id="file"
+              type="file"
+              variant="unstyled"
+              onChange={handleFileChange}
+            />
             <Button
               type="submit"
               mt="4"
