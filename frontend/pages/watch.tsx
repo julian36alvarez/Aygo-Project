@@ -39,26 +39,28 @@ const WatchVideo = () => {
     auth.validateToken(token).then(res => {
       console.log('Token validated', res)
       setValidated(res)
+      getVideosApi()
     })
-    if (validated) {
-      fetch(`${config.url}/items`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }).then(response => {
-        if (response) {
-          console.log(response)
-          response
-            .json()
-            .then(data => {
-              setVideos(data)
-            })
-            .catch(err => {})
-        }
-      })
-    }
   }, [])
+
+  const getVideosApi = async () => {
+    fetch(`${config.url}/items`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(response => {
+      if (response) {
+        console.log(response)
+        response
+          .json()
+          .then(data => {
+            setVideos(data)
+          })
+          .catch(err => {})
+      }
+    })
+  }
 
   const handleVideoClick = v => {
     setCurrName(v.name)
