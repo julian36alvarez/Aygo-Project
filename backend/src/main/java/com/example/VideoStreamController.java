@@ -4,15 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,16 +29,6 @@ public class VideoStreamController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<String> root() {
         return ResponseEntity.ok("Welcome to the Video Streamer!");
-    }
-
-    @GetMapping("/watch")
-    public String designer() {
-        return "video";
-    }
-
-    @GetMapping("/upload")
-    public String upload() {
-        return "upload";
     }
 
     // Upload a MP4 to an Amazon S3 bucket
