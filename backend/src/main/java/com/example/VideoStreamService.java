@@ -98,12 +98,14 @@ public class VideoStreamService {
             }
 
             List<Tag> tagList = modList(keys);
+            System.out.println("Tags: " + tagList);
             return tagList;
 
         } catch (S3Exception e) {
             System.err.println(e.awsErrorDetails().errorMessage());
             System.exit(1);
         }
+        System.out.println("Not returning anything");
         return new ArrayList<>();
     }
 
