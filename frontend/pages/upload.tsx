@@ -26,7 +26,7 @@ const UploadVideo = () => {
     fetch(`${config.url}/fileupload?description=${description}`, {
       method: 'POST',
       body: formData
-    }).then(r => alert('Video uploaded successfully!'))
+    }).then(r => console.log(r))
   }
 
   return (
@@ -42,7 +42,6 @@ const UploadVideo = () => {
           <FormControl>
             <FormLabel>Video Description</FormLabel>
             <Input
-              required
               type={'text'}
               name="description"
               marginBottom={8}

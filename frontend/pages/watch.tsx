@@ -40,9 +40,15 @@ const WatchVideo = () => {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(response => {
-      response.json().then(data => {
-        setVideos(data)
-      })
+      if (response) {
+        console.log(response)
+        response
+          .json()
+          .then(data => {
+            setVideos(data)
+          })
+          .catch(err => {})
+      }
     })
   }, [])
 

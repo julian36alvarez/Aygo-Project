@@ -65,6 +65,7 @@ public class VideoStreamService {
 
     // Returns a schema that describes all tags for all videos in the given bucket.
     public List<Tag> getTags(String bucketName) {
+        System.out.println("Getting tags for all videos in the bucket " + bucketName);
         s3 = getClient();
 
         try {
