@@ -7,32 +7,78 @@ import {
   ListItem,
   ListIcon
 } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 import Footer from '../components/footer'
 import NavBar from '../components/navbar'
+import Login from '../components/login'
+import SimpleNavBar from '../components/simple-navbar'
+import auth from '../utils/auth'
 
 const HomePage = () => {
+  const [token, setToken] = useState('')
+  const [validated, setValidated] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('aygo-token-aws')
+    if (token) {
+      setToken(token)
+    } else {
+      setToken(auth.getToken())
+    }
+    auth.validateToken(token).then(res => {
+      console.log('Token validated', res)
+      setValidated(res)
+      if (!res) {
+        localStorage.removeItem('aygo-token-aws')
+      }
+    })
+  }, [token])
+
   return (
-    <Box pb={4} minHeight="100vh" position="relative">
-      <NavBar />
-      <Container maxW={'container.sm'} pt="8rem" pb={700}>
-        <Heading paddingBottom={10}>Video Streaming App</Heading>
-        <p>Prototype for uploading and watching videos directly from AWS S3</p>
-        <List spacing={3}>
-          <ListItem>
-            <ListIcon as={CheckCircleIcon} color="green.500" />
-            Upload MP4 videos to S3
-          </ListItem>
-          <ListItem>
-            <ListIcon as={CheckCircleIcon} color="green.500" />
-            Stores data in AWS S3
-          </ListItem>
-          <ListItem>
-            <ListIcon as={CheckCircleIcon} color="green.500" />
-            View videos directly from S3
-          </ListItem>
-        </List>
-      </Container>
-      <Footer />
+    <Box>
+      {validated ? (
+        <Box pb={4} minHeight="100vh" position="relative">
+          <NavBar />
+          <Container maxW={'container.sm'} pt="8rem" pb={700}>
+            <Heading paddingBottom={10}>Video Streaming App</Heading>
+            <p>
+              Prototype for uploading and watching videos directly from AWS S3
+            </p>
+            <List spacing={3}>
+              <ListItem>
+                <ListIcon as={CheckCircleIcon} color="green.500" />
+                Upload MP4 videos to S3
+              </ListItem>
+              <ListItem>
+                <ListIcon as={CheckCircleIcon} color="green.500" />
+                Stores data in AWS S3
+              </ListItem>
+              <ListItem>
+                <ListIcon as={CheckCircleIcon} color="green.500" />
+                View videos directly from S3
+              </ListItem>
+            </List>
+          </Container>
+          <Footer />
+        </Box>
+      ) : (
+        <Box>
+          <SimpleNavBar />
+          <Box
+            position="fixed"
+            top="50%"
+            left="50%"
+            marginTop="-150px"
+            marginLeft="-250px"
+            textAlign={'center'}
+          >
+            <Box marginBottom={'2rem'}>
+              <Heading as="h1">Video Streaming Prototype</Heading>
+            </Box>
+            <Login />
+          </Box>
+        </Box>
+      )}
     </Box>
   )
 }

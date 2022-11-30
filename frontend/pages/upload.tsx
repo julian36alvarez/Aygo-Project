@@ -7,59 +7,89 @@ import {
   Input,
   Button
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Footer from '../components/footer'
 import NavBar from '../components/navbar'
+import auth from '../utils/auth'
 import config from '../config/config'
+import HomePage from '.'
 
 const UploadVideo = () => {
   const [description, setDescription] = useState('')
   const [file, setFile] = useState(null)
+  const [validated, setValidated] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('aygo-token-aws')
+    auth.validateToken(token).then(res => {
+      console.log('Token validated', res)
+      setValidated(res)
+    })
+  }, [])
 
   const handleDescriptionChange = e => setDescription(e.target.value)
   const handleFileChange = e => setFile(e.target.files[0])
 
   const sendVideo = e => {
     e.preventDefault()
+    if (description === '' || file === null) {
+      alert('Please fill out all fields')
+      return
+    }
     const formData = new FormData()
     formData.append('file', file)
     fetch(`${config.url}/fileupload?description=${description}`, {
       method: 'POST',
       body: formData
-    }).then(r => console.log(r))
+    }).then(r => {
+      setDescription('')
+    })
   }
 
   return (
-    <Box pb={4}>
-      <NavBar />
-      <Container maxW={'container.md'} pt={20}>
-        <Heading>Video Streaming from S3</Heading>
-        <Container
-          paddingTop={10}
-          maxW={'container.sm'}
-          paddingBottom={'800px'}
-        >
-          <FormControl>
-            <FormLabel>Video Description</FormLabel>
-            <Input
-              type={'text'}
-              name="description"
-              marginBottom={8}
-              onChange={handleDescriptionChange}
-            />
-            <Input type="file" variant="unstyled" onChange={handleFileChange} />
-            <Button
-              type="submit"
-              mt="4"
-              colorScheme={'green'}
-              onClick={sendVideo}
+    <Box>
+      {validated ? (
+        <Box pb={4}>
+          <NavBar />
+          <Container maxW={'container.md'} pt={20}>
+            <Heading>Video Streaming from S3</Heading>
+            <Container
+              paddingTop={10}
+              maxW={'container.sm'}
+              paddingBottom={'800px'}
             >
-              Upload
-            </Button>
-          </FormControl>
-        </Container>
-      </Container>
-      <Footer />
+              <FormControl>
+                <FormLabel>Video Description</FormLabel>
+                <Input
+                  type={'text'}
+                  name="description"
+                  marginBottom={8}
+                  onChange={handleDescriptionChange}
+                  value={description}
+                />
+                <Input
+                  key={description}
+                  id="file"
+                  type="file"
+                  variant="unstyled"
+                  onChange={handleFileChange}
+                />
+                <Button
+                  type="submit"
+                  mt="4"
+                  colorScheme={'green'}
+                  onClick={sendVideo}
+                >
+                  Upload
+                </Button>
+              </FormControl>
+            </Container>
+          </Container>
+          <Footer />
+        </Box>
+      ) : (
+        <HomePage />
+      )}
     </Box>
   )
 }
