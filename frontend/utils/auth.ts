@@ -1,19 +1,6 @@
 import config from "../config/config"
 import { CognitoJwtVerifier } from 'aws-jwt-verify'
 
-const getToken = () => {
-  const hash = window.location.hash
-  if (hash) {
-    const token = hash.split('&')[0].split('=')[1]
-    if (token) {
-      localStorage.setItem('aygo-token-aws', token)
-      return token
-    } else {
-      return localStorage.getItem('aygo-token-aws')
-    }
-  }
-}
-
 const validateToken = async (token) => {
   const verifier = CognitoJwtVerifier.create({
     userPoolId: `${config.user_pool_id}`,
@@ -32,4 +19,32 @@ const validateToken = async (token) => {
   }
 }
 
-export default {getToken, validateToken}
+const isAuth = async () => {
+  const hash = window.location.hash
+  if (hash) {
+    const token = hash.split('&')[0].split('=')[1]
+    let auth = false
+    await validateToken(token).then((isValid) => {
+      if (isValid) {
+        auth = true
+        localStorage.setItem('token', token)
+      } else {
+        console.log('Token is invalid')
+      }
+    })
+    return auth
+  } else {
+    if (localStorage.getItem('token')) {
+      let auth = false;
+      await validateToken(localStorage.getItem('token')).then((isValid) => {
+        if (!isValid) {
+          localStorage.removeItem('token')
+        } 
+        auth = isValid
+      })
+      return auth
+  }
+}
+}
+
+export default {isAuth}

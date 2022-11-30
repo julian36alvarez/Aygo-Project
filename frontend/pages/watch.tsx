@@ -34,14 +34,13 @@ const WatchVideo = () => {
   const [validated, setValidated] = useState(false)
 
   useEffect(() => {
-    const token = localStorage.getItem('aygo-token-aws')
-    console.log('Token IN WATCH', token)
-    auth.validateToken(token).then(res => {
-      console.log('Token validated', res)
-      setValidated(res)
-      getVideosApi()
+    auth.isAuth().then(t => {
+      setValidated(t)
+      if (t) {
+        getVideosApi()
+      }
     })
-  }, [])
+  }, [validated])
 
   const getVideosApi = async () => {
     fetch(`${config.url}/items`, {

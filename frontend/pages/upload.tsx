@@ -20,10 +20,8 @@ const UploadVideo = () => {
   const [validated, setValidated] = useState(false)
 
   useEffect(() => {
-    const token = localStorage.getItem('aygo-token-aws')
-    auth.validateToken(token).then(res => {
-      console.log('Token validated', res)
-      setValidated(res)
+    auth.isAuth().then(t => {
+      setValidated(t)
     })
   }, [])
 

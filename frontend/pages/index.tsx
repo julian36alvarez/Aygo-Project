@@ -15,24 +15,13 @@ import SimpleNavBar from '../components/simple-navbar'
 import auth from '../utils/auth'
 
 const HomePage = () => {
-  const [token, setToken] = useState('')
   const [validated, setValidated] = useState(false)
 
   useEffect(() => {
-    const token = localStorage.getItem('aygo-token-aws')
-    if (token) {
-      setToken(token)
-    } else {
-      setToken(auth.getToken())
-    }
-    auth.validateToken(token).then(res => {
-      console.log('Token validated', res)
-      setValidated(res)
-      if (!res) {
-        localStorage.removeItem('aygo-token-aws')
-      }
+    auth.isAuth().then(t => {
+      setValidated(t)
     })
-  }, [token])
+  }, [validated])
 
   return (
     <Box>
