@@ -27,6 +27,7 @@ const validateToken = async (token) => {
     console.log('Token is valid. Payload', payload)
     return true
   } catch (error) {
+    localStorage.clear()
     console.log('Token is invalid', error)
     return false
   }
