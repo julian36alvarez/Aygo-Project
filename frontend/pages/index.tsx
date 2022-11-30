@@ -28,6 +28,9 @@ const HomePage = () => {
     auth.validateToken(token).then(res => {
       console.log('Token validated', res)
       setValidated(res)
+      if (!res) {
+        localStorage.removeItem('aygo-token-aws')
+      }
     })
   }, [token])
 
