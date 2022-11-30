@@ -18,6 +18,7 @@ const UploadVideo = () => {
   const [description, setDescription] = useState('')
   const [file, setFile] = useState(null)
   const [validated, setValidated] = useState(false)
+  const [tmp, setTmp] = useState(1)
 
   useEffect(() => {
     auth.isAuth().then(t => {
@@ -39,9 +40,15 @@ const UploadVideo = () => {
     fetch(`${config.url}/fileupload?description=${description}`, {
       method: 'POST',
       body: formData
-    }).then(r => {
-      setDescription('')
     })
+      .then(r => {
+        setDescription('')
+        setTmp(tmp ^ 1)
+        alert('Video uploaded successfully')
+      })
+      .catch(e => {
+        alert('Error uploading video')
+      })
   }
 
   return (
@@ -66,7 +73,7 @@ const UploadVideo = () => {
                   value={description}
                 />
                 <Input
-                  key={description}
+                  key={tmp}
                   id="file"
                   type="file"
                   variant="unstyled"
