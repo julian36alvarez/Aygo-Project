@@ -90,7 +90,7 @@ Para ello se creó un stack de CDK que contiene los siguientes recursos:
 
 ## Demo
 
-![](images/AygoDemo.wmv)
+https://www.youtube.com/watch?v=CaycDuXT294
 
 ## Conclusión
 
