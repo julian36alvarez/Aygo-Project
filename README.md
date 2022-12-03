@@ -88,6 +88,9 @@ Para ello se creó un stack de CDK que contiene los siguientes recursos:
 
 ![image](https://user-images.githubusercontent.com/31891276/205422940-91deb247-ee49-4f04-a499-165399792360.png)
 
+## Demo
+
+![](images/AygoDemo.wmv)
 
 ## Conclusión
 
