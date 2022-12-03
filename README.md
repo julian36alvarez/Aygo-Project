@@ -96,6 +96,15 @@ https://www.youtube.com/watch?v=CaycDuXT294
 
 ## Conclusión
 
+- La solución en la nube aporta resiliencia y seguridad, además de disponibilidad.
+- Al centralizar los datos y catalogarlos podemos reducir el tiempo de onboarding de los empleados y optimizar costos.
+- Proyectos cuyas personas ya no se encuentren en la compañía no presentaran grandes problemas debido a que la documentación en video, si se realizaron, está centralizada.
+
+## Integrantes
+
+- Juan Nicolas Nontoa Caballero
+- Julian Benitez Gutierrez
+- Julian Andres Alvarez Villamil
 
 ## Referencias
 
