@@ -78,13 +78,15 @@ Para ello se creó un stack de CDK que contiene los siguientes recursos:
 
 ## Pruebas de Carga
 
-![image](https://user-images.githubusercontent.com/31891276/205421838-2300f2e8-ab9e-4f87-9b11-5462c9cf0b7c.png)
+![image](https://user-images.githubusercontent.com/31891276/205422807-8ede9d19-4336-457b-a57d-12173bbeddb2.png)
 
-![image](https://user-images.githubusercontent.com/31891276/205421848-8f0e5c0a-fdf0-4c07-8cbb-c1814b4ce481.png)
+![image](https://user-images.githubusercontent.com/31891276/205422825-81229866-5e52-4eee-9dc3-4eea11df9611.png)
 
-![image](https://user-images.githubusercontent.com/31891276/205421859-b8226926-bd1b-4099-8301-65523039e1af.png)
+![image](https://user-images.githubusercontent.com/31891276/205422923-1381c091-1500-4523-ac01-8205505b9370.png)
 
-![image](https://user-images.githubusercontent.com/31891276/205421879-9d6f011c-7bbf-4b0a-a46e-c592ee75fa25.png)
+![image](https://user-images.githubusercontent.com/31891276/205422930-90e84748-32fa-43df-830d-8149274107ac.png)
+
+![image](https://user-images.githubusercontent.com/31891276/205422940-91deb247-ee49-4f04-a499-165399792360.png)
 
 
 ## Conclusión
