@@ -76,6 +76,17 @@ Para ello se creó un stack de CDK que contiene los siguientes recursos:
 - Lambda para el procesamiento de los videos.
 
 
+## Pruebas de Carga
+
+![image](https://user-images.githubusercontent.com/31891276/205421838-2300f2e8-ab9e-4f87-9b11-5462c9cf0b7c.png)
+
+![image](https://user-images.githubusercontent.com/31891276/205421848-8f0e5c0a-fdf0-4c07-8cbb-c1814b4ce481.png)
+
+![image](https://user-images.githubusercontent.com/31891276/205421859-b8226926-bd1b-4099-8301-65523039e1af.png)
+
+![image](https://user-images.githubusercontent.com/31891276/205421879-9d6f011c-7bbf-4b0a-a46e-c592ee75fa25.png)
+
+
 ## Conclusión
 
 
