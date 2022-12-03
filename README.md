@@ -90,7 +90,9 @@ Para ello se creó un stack de CDK que contiene los siguientes recursos:
 
 ## Demo
 
-https://www.youtube.com/watch?v=CaycDuXT294
+![image](https://user-images.githubusercontent.com/31891276/205425414-3d0f302b-998c-4cad-8839-ab7ee05018c3.png)
+
+
 
 ## Conclusión
 
